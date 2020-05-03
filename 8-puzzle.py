@@ -65,7 +65,7 @@ def puzzleUser():
 def algorithmChoice():
     print ("1. Uniform Cost Search")
     print ("2. A* with the Misplaced Tile heuristic")
-    print ("3. A* with the Euclediandistance heuristic")
+    print ("3. A* with the Eucledian distance heuristic")
     
     while 1:
         algoChoice = input("Enter your choice of algorithm:\n")
