@@ -1,7 +1,7 @@
 import sys, copy
 
 # this is the goal state i.e. when the iteration stops
-goal = [['1','2','3'],['4','5','6'],['7','8',' ']]
+goal = [['1','2','3'],['4','5','6'],['7','8','b']]
 
 def main() :
     input = puzzleUser() # user input
@@ -11,7 +11,7 @@ def main() :
 # user input
 def puzzleUser():
     # as per the specifications we have to set a default puzzleUser
-    default = [['1','2','3'],['4','8',' '],['7','6', '5']]
+    default = [['1','2','3'],['4','8','b'],['7','6', '5']]
     # puzzleChoice is the puzzle that our algorithm operates on
     puzzleChoice = []
     print ("Welcome to Justin Gafford's (SID 862052189) 8 puzzle solver")
@@ -34,7 +34,7 @@ def puzzleUser():
             row1 = row1.split(' ')
             # we convert the 0 to a blank space
             if (row1.count('0') == 1):
-                row1[row1.index('0')] = ' '
+                row1[row1.index('0')] = 'b'
             
             # row 2 input
             row2 = input("Enter the second row, use spaces between numbers: ")
@@ -42,7 +42,7 @@ def puzzleUser():
             row2 = row2.split(' ')
             # we convert the 0 to a blank space
             if (row2.count('0') == 1):
-                row2[row2.index('0')] = ' '
+                row2[row2.index('0')] = 'b'
         
             # row 3 input
             row3 = input("Enter the third row, use spaces between each number: ")
@@ -50,7 +50,7 @@ def puzzleUser():
             row3 = row3.split(' ')
             # we convert the 0 to a blank space
             if (row3.count('0') == 1):
-                row3[row3.index('0')] = ' '
+                row3[row3.index('0')] = 'b'
             
             # assemble user input
             puzzleChoice.append(row1)
@@ -100,7 +100,7 @@ def mtHeuristic(puzzleChoice):
     for x in range(3):
         for y in range(3):
             # dont check the empty space
-            if(puzzleChoice[x][y] != ' '):
+            if(puzzleChoice[x][y] != 'b'):
                 if(puzzleChoice[x][y] != goal[x][y]):
                     misplaceNum = misplaceNum + 1 
     return misplaceNum
@@ -121,7 +121,7 @@ def edHeuristic(puzzleChoice):
                     pRow = i
                     pCol = j
         # caluclating the eucledian distance using puzzle and goal rows and columns
-        eucDist = eucDist + (pow((gRow - pRow),2) + pow((gCol - pCol),0))
+        eucDist = eucDist +  (pow((gRow - pRow),2) + pow((gCol - pCol),0))
     return eucDist
     
 def puzzleMove(puzzleChoice):
@@ -132,62 +132,62 @@ def puzzleMove(puzzleChoice):
     # move blank tile up
     for x in puzzleChoice:
         # this code checks where our blank tile is
-        if (x.count(' ') == 1):
+        if (x.count('b') == 1):
             # we have to make sure its not on top so moving the tile up is legal
             if (x != moveUp[0]):
-                blankIndex = x.index(' ')
+                blankIndex = x.index('b')
                 # the blank is on second row
                 if(x == puzzleChoice[1]):
                     moveUp[1][blankIndex] = moveUp[0][blankIndex]
-                    moveUp[0][blankIndex] = ' '
+                    moveUp[0][blankIndex] = 'b'
                     possibleMoves.append(moveUp)
                 # the blank is on third row
                 else:
                     moveUp[2][blankIndex] = moveUp[1][blankIndex]
-                    moveUp[1][blankIndex] = ' '
+                    moveUp[1][blankIndex] = 'b'
                     possibleMoves.append(moveUp)
 
     moveDown = copy.deepcopy(puzzleChoice)
     # move blank down
     for x in puzzleChoice:
         # this code checks where our blank tile is
-        if (x.count(' ') == 1):
+        if (x.count('b') == 1):
             # we have to make sure its not on bottom so moving the tile down is legal
             if (x != puzzleChoice[2]):
-                blankIndex = x.index(' ')
+                blankIndex = x.index('b')
                 # the blank is on second row
                 if(x == puzzleChoice[0]):
                     moveDown[0][blankIndex] = moveDown[1][blankIndex]
-                    moveDown[1][blankIndex] = ' '
+                    moveDown[1][blankIndex] = 'b'
                     possibleMoves.append(moveDown)
                 # the blank is on third row
                 else:
                     moveDown[1][blankIndex] = moveDown[2][blankIndex]
-                    moveDown[2][blankIndex] = ' '
+                    moveDown[2][blankIndex] = 'b'
                     possibleMoves.append(moveDown)
             
     moveLeft = copy.deepcopy(puzzleChoice)
     # move blank left
     for x in moveLeft:
         # this code checks where our blank tile is
-        if (x.count(' ') == 1):
+        if (x.count('b') == 1):
             # we have to make sure its not on left so moving the tile left is legal
-            if (x.index(' ') != 0):
-                blankIndex = x.index(' ')
+            if (x.index('b') != 0):
+                blankIndex = x.index('b')
                 x[blankIndex] = x[blankIndex - 1]
-                x[blankIndex - 1] = ' '
+                x[blankIndex - 1] = 'b'
                 possibleMoves.append(moveLeft)
 
     moveRight = copy.deepcopy(puzzleChoice)
     # move blank right
     for x in moveRight:
         # this code checks where our blank tile is
-        if (x.count(' ') == 1):
+        if (x.count('b') == 1):
             # we have to make sure its not on right so moving the tile right is legal           
-            if (x.index(' ') != 2):
-                blankIndex = x.index(' ')
+            if (x.index('b') != 2):
+                blankIndex = x.index('b')
                 x[blankIndex] = x[blankIndex + 1]
-                x[blankIndex + 1] = ' '
+                x[blankIndex + 1] = 'b'
                 possibleMoves.append(moveRight)
                 
     return possibleMoves
