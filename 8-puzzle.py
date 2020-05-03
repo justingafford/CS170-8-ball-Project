@@ -94,7 +94,7 @@ class node:
     def puzzleSquareDefine(aNode,puzzleChoice):
         aNode.puzzleSquare = puzzleChoice
 
-def mtHeuristic():
+def mtHeuristic(puzzleChoice):
     misplaceNum = 0
     # 3x3 matrix so x and y have a range of 3
     for x in range(3):
@@ -105,7 +105,7 @@ def mtHeuristic():
                     misplaceNum = misplaceNum + 1 
     return misplaceNum
     
-def edHeuristic():
+def edHeuristic(puzzleChoice):
     eucDist = 0
     puzzleNums = ['1', '2', '3', '4', '5', '6', '7', '8']
     # search through the all 8 numbers in the puzzle
@@ -192,6 +192,24 @@ def puzzleMove(puzzleChoice):
                 possibleMoves.append(moveRight)
     
     return possibleMoves
+
+#adapted from: https://www.geeksforgeeks.org/python-program-for-selection-sort/
+def selectionSort(queuePuzzle):
+    # Traverse through all array elements
+    for i in range(len(queuePuzzle)) :
+        # Find the minimum element in remaining  
+        # unsorted array 
+        min_idx = i 
+        for j in range(i+1, len(queuePuzzle)): 
+            if (queuePuzzle[min_idx].heuristic + queuePuzzle[min_idx].depth > \
+                queuePuzzle[j].heuristic + queuePuzzle[j].depth): 
+                    min_idx = j 
+        # Swap the found minimum element with  
+        # the first element         
+        queuePuzzle[i], queuePuzzle[min_idx] = queuePuzzle[min_idx], queuePuzzle[i] 
+        return queuePuzzle
+
+    
 def solvePuzzle(puzzleChoice,algorithmChoice):
     # number of expanded nodes
     numExpanded = 0
@@ -271,6 +289,7 @@ def solvePuzzle(puzzleChoice,algorithmChoice):
             #update if we have a greater length of nodes than are in queueSize
             if (len(queuePuzzle) > queueSize):
                 queueSize = len(queuePuzzle)
+        queuePuzzle = selectionSort(queuePuzzle)
         
 if __name__ == "__main__":
     main()
