@@ -123,7 +123,7 @@ def edHeuristic():
         # caluclating the eucledian distance using puzzle and goal rows and columns
         eucDist = eucDist + (pow((gRow - pRow),2) + pow((gCol - pCol),0))
     return eucDist
-def puzzleMove():
+def puzzleMove(puzzleChoice):
     possibleMoves = []
     #We have to account for 4 movements including: up,down,left,right
     
@@ -139,12 +139,12 @@ def puzzleMove():
                 if(x == puzzleChoice[1]):
                     moveUp[1][blankIndex] = moveUp[0][blankIndex]
                     moveUp[0][blankIndex] = ' '
-                    expandList.append(moveUp)
+                    possibleMoves.append(moveUp)
                 # the blank is on third row
                 else:
                     moveUp[2][blankIndex] = moveUp[1][blankIndex]
                     moveUp[1][blankIndex] = ' '
-                    expandList.append(moveUp)
+                    possibleMoves.append(moveUp)
     
     moveDown = copy.deepcopy(puzzleChoice)
     # move blank down
@@ -158,18 +158,18 @@ def puzzleMove():
                 if(x == puzzleChoice[1]):
                     moveDown[0][blankIndex] = moveDown[1][blankIndex]
                     moveDown[1][blankIndex] = ' '
-                    expandList.append(moveDown)
+                    puzzleChoice.append(moveDown)
                 # the blank is on third row
                 else:
                     moveDown[1][blankIndex] = moveDown[2][blankIndex]
                     moveDown[2][blankIndex] = ' '
-                    expandList.append(moveDown)
+                    possibleMoves.append(moveDown)
                     
     
    
     moveLeft = copy.deepcopy(puzzleChoice)
     # move blank left
-    for x in MOVELeft:
+    for x in moveLeft:
         # this code checks where our blank tile is
         if(x.count(' ') == 1):
             # we have to make sure its not on left so moving the tile left is legal
@@ -177,7 +177,7 @@ def puzzleMove():
                 blankIndex = x.index(' ')
                 x[blankIndex] = x[blankIndex - 1]
                 x[blankIndex - 1] = ' '
-                expand.append(moveLeft)
+                possibleMoves.append(moveLeft)
 
     moveRight = copy.deepcopy(puzzleChoice)
     # move blank right
@@ -189,7 +189,7 @@ def puzzleMove():
                 blankIndex = x.index(' ')
                 x[blankIndex] = x[blankIndex + 1]
                 x[blankIndex + 1] = ' '
-                expand.append(moveRight)
+                possibleMoves.append(moveRight)
     
     return possibleMoves
 def solvePuzzle(puzzleChoice,algorithmChoice):
@@ -225,10 +225,52 @@ def solvePuzzle(puzzleChoice,algorithmChoice):
         nextNode.puzzleSquare = queuePuzzle[0].puzzleSquare
         nextNode.heuristic = queuePuzzle[0].heuristic
         nextNode.depth = queuePuzzle[0].depth
+        #print the depth and heuristic as in the project specifications
         print ("The best node to expand with g(n) = ", nextNode.depth ,
             " and h(n) = ", nextNode.heuristic, " is...")
         nextNode.puzzlePrint()
         print ("Expanding this node...")
-        #print the depth and heuristic as in the 
+        
+        #we then pop the front of the queue
+        queuePuzzle.pop(0)
+        
+        #As per A* properties, we check goalstate after we pop a node
+        if(goalCheck(nextNode.puzzleSquare)):
+            #If goal is reached we print out stats of simulation
+            print ("Goal!!!")
+            checkNode.puzzlePrint()
+            print ("To solve this problem the search algorithm expande a total of "
+                , numExpanded, " nodes")
+            print ("The maximum number of nodes in the queue at any one time:"
+                , queueSize)
+            return
+        
+        #We move the puzzle left,right,up or down
+        swapNodes = puzzleMove(nextNode.puzzleSquare)
+        
+        #Each possible move is added to the queue(tree of all possible moves)
+        for x in swapNodes:
+            branchNode = node()
+            branchNode.puzzleSquareDefine(x)
+            #as before we define our heuristics(it'll be the same)
+            if(algorithmChoice == "ucSearch"):
+                branchNode.heuristic = 1
+            elif(algorithmChoice == "mtHeuristic"):
+                branchNode.heuristic = mtHeuristic(branchNode.puzzleSquare)
+            elif(algorithmChoice == "edHeuristic"):
+                branchNode.heuristic = edHeuristic(branchNode.puzzleSquare)
+                
+            #because we are adding more nodes, we increase the depth
+            branchNode.depth = nextNode.depth + 1
+            #after we adjust the depth, we add the node to the queue
+            queuePuzzle.append(branchNode) 
+            
+            #since we expanded another node, increment numExpanded
+            numExpanded = numExpanded + 1
+            
+            #update if we have a greater length of nodes than are in queueSize
+            if (len(queuePuzzle) > queueSize):
+                queueSize = len(queuePuzzle)
+        
 if __name__ == "__main__":
     main()
