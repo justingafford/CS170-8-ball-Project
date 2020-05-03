@@ -11,7 +11,7 @@ def main() :
 # user input
 def puzzleUser():
     # as per the specifications we have to set a default puzzleUser
-    default = [['1',' ','3'],['5','2','4'],['7','8', '6']]
+    default = [['1','2','3'],['4','8',' '],['7','6', '5']]
     # puzzleChoice is the puzzle that our algorithm operates on
     puzzleChoice = []
     print ("Welcome to Justin Gafford's (SID 862052189) 8 puzzle solver")
@@ -123,9 +123,10 @@ def edHeuristic(puzzleChoice):
         # caluclating the eucledian distance using puzzle and goal rows and columns
         eucDist = eucDist + (pow((gRow - pRow),2) + pow((gCol - pCol),0))
     return eucDist
+    
 def puzzleMove(puzzleChoice):
     possibleMoves = []
-    #We have to account for 4 movements including: up,down,left,right
+    # We have to account for 4 movements including: up,down,left,right
     
     moveUp = copy.deepcopy(puzzleChoice)
     # move blank tile up
@@ -145,35 +146,33 @@ def puzzleMove(puzzleChoice):
                     moveUp[2][blankIndex] = moveUp[1][blankIndex]
                     moveUp[1][blankIndex] = ' '
                     possibleMoves.append(moveUp)
-    
+
     moveDown = copy.deepcopy(puzzleChoice)
     # move blank down
     for x in puzzleChoice:
         # this code checks where our blank tile is
         if (x.count(' ') == 1):
             # we have to make sure its not on bottom so moving the tile down is legal
-            if (x != moveDown[2]):
+            if (x != puzzleChoice[2]):
                 blankIndex = x.index(' ')
                 # the blank is on second row
-                if(x == puzzleChoice[1]):
+                if(x == puzzleChoice[0]):
                     moveDown[0][blankIndex] = moveDown[1][blankIndex]
                     moveDown[1][blankIndex] = ' '
-                    puzzleChoice.append(moveDown)
+                    possibleMoves.append(moveDown)
                 # the blank is on third row
                 else:
                     moveDown[1][blankIndex] = moveDown[2][blankIndex]
                     moveDown[2][blankIndex] = ' '
                     possibleMoves.append(moveDown)
-                    
-    
-   
+            
     moveLeft = copy.deepcopy(puzzleChoice)
     # move blank left
     for x in moveLeft:
         # this code checks where our blank tile is
-        if(x.count(' ') == 1):
+        if (x.count(' ') == 1):
             # we have to make sure its not on left so moving the tile left is legal
-            if(x.index(' ') != 0):
+            if (x.index(' ') != 0):
                 blankIndex = x.index(' ')
                 x[blankIndex] = x[blankIndex - 1]
                 x[blankIndex - 1] = ' '
@@ -183,15 +182,16 @@ def puzzleMove(puzzleChoice):
     # move blank right
     for x in moveRight:
         # this code checks where our blank tile is
-        if(x.count(' ') == 1):
-            # we have to make sure its not on right so moving the tile right is legal
-            if(x.index(' ') != 2):
+        if (x.count(' ') == 1):
+            # we have to make sure its not on right so moving the tile right is legal           
+            if (x.index(' ') != 2):
                 blankIndex = x.index(' ')
                 x[blankIndex] = x[blankIndex + 1]
                 x[blankIndex + 1] = ' '
                 possibleMoves.append(moveRight)
-    
+                
     return possibleMoves
+
 
 #adapted from: https://www.geeksforgeeks.org/python-program-for-selection-sort/
 def selectionSort(queuePuzzle):
@@ -256,7 +256,7 @@ def solvePuzzle(puzzleChoice,algorithmChoice):
         if(goalCheck(nextNode.puzzleSquare)):
             #If goal is reached we print out stats of simulation
             print ("Goal!!!")
-            checkNode.puzzlePrint()
+            nextNode.puzzlePrint()
             print ("To solve this problem the search algorithm expande a total of "
                 , numExpanded, " nodes")
             print ("The maximum number of nodes in the queue at any one time:"
