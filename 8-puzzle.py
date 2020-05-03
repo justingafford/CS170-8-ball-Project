@@ -12,6 +12,7 @@ def main() :
 def puzzleUser():
     #as per the specifications we have to set a default puzzleUser
     default = [['1',' ','3'],['5','2','4'],['7','8', '6']]
+    #puzzleChoice is the puzzle that our algorithm operates on
     puzzleChoice = []
     print ("Welcome to Justin Gafford's (SID 862052189) 8 puzzle solver")
     
@@ -75,6 +76,54 @@ def algorithmChoice():
         elif(algoChoice == '3'):
             return "edHeuristic"
     return algoChoice
+    
+def goalCheck(puzzleChoice):
+    return goal == puzzleChoice  
+    
+#this is the data structure of our program, as we enqueue puzzle states with nodes
+class node:
+    #initailize to 0
+    def __init__(aNode):
+        aNode.heuristic = 0
+        aNode.depth = 0 
+    #overide print function to print out puzzles
+    def puzzlePrint(aNode):
+        print (aNode.puzzleSquare[0][0], aNode.puzzleSquare[0][1], aNode.puzzleSquare[0][2])
+        print (aNode.puzzleSquare[1][0], aNode.puzzleSquare[1][1], aNode.puzzleSquare[1][2])
+        print (aNode.puzzleSquare[2][0], aNode.puzzleSquare[2][1], aNode.puzzleSquare[2][2])
+    def puzzleSquareDefine(aNode,puzzleChoice):
+        self.puzzleSquare = puzzleChoice
 
+def mtHeuristic():
+    misplaceNum = 0
+    #3x3 matrix so x and y have a range of 3
+    for x in range(3):
+        for y in range(3):
+            #dont check the empty space
+            if(puzzleChoice[x][y] != ' '):
+                if(puzzleChoice[x][y] != goal[x][y]):
+                    misplaceNum = misplaceNum + 1 
+    return misplaceNum
+    
+def edHeuristic():
+    eucDist = 0
+    puzzleNums = ['1', '2', '3', '4', '5', '6', '7', '8']
+    # search through the all 8 numbers in the puzzle
+    for x in puzzleNums:
+        for i in range(3):
+            for j in range(3):
+                # we search where we are in relation to goal
+                if (x == goal[i][j]):
+                    gRow = i
+                    gCol = j
+                # we search where we are in relation to the puzzleChoice
+                if (x == puzzleChoice[i][j]):
+                    pRow = i
+                    pCol = j
+        #caluclating the eucledian distance using puzzle and goal rows and columns
+        eucDist = eucDist + (pow((gRow - pRow),2) + pow((gCol - pCol),0) )
+    return eucDist
+def solvePuzzle():
+    return   
 if __name__ == "__main__":
     main()
