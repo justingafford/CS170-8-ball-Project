@@ -121,9 +121,78 @@ def edHeuristic():
                     pRow = i
                     pCol = j
         #caluclating the eucledian distance using puzzle and goal rows and columns
-        eucDist = eucDist + (pow((gRow - pRow),2) + pow((gCol - pCol),0) )
+        eucDist = eucDist + (pow((gRow - pRow),2) + pow((gCol - pCol),0))
     return eucDist
-def solvePuzzle():
+def puzzleMove():
+    possibleMoves = []
+    #We have to account for 4 movements including: up,down,left,right
+    
+    moveUp = copy.deepcopy(puzzleChoice)
+    #move blank tile up
+    for x in puzzleChoice:
+        # this code checks where our blank tile is
+        if (x.count(' ') == 1):
+            # we have to make sure its not on top so moving the tile up is legal
+            if (x != moveUp[0]):
+                blankIndex = x.index(' ')
+                # the blank is on second row
+                if(x == puzzleChoice[1]):
+                    moveUp[1][blankIndex] = moveUp[0][blankIndex]
+                    moveUp[0][blankIndex] = ' '
+                    expandList.append(moveUp)
+                # the blank is on third row
+                else:
+                    moveUp[2][blankIndex] = moveUp[1][blankIndex]
+                    moveUp[1][blankIndex] = ' '
+                    expandList.append(moveUp)
+    
+    moveDown = copy.deepcopy(puzzleChoice)
+    #move blank down
+    for x in puzzleChoice:
+        # this code checks where our blank tile is
+        if (x.count(' ') == 1):
+            # we have to make sure its not on bottom so moving the tile down is legal
+            if (x != moveDown[2]):
+                blankIndex = x.index(' ')
+                # the blank is on second row
+                if(x == puzzleChoice[1]):
+                    moveDown[0][blankIndex] = moveDown[1][blankIndex]
+                    moveDown[1][blankIndex] = ' '
+                    expandList.append(moveDown)
+                # the blank is on third row
+                else:
+                    moveDown[1][blankIndex] = moveDown[2][blankIndex]
+                    moveDown[2][blankIndex] = ' '
+                    expandList.append(moveDown)
+                    
+    
+   
+    moveLeft = copy.deepcopy(puzzleChoice)
+    #move blank left
+    for x in MOVELeft:
+        # this code checks where our blank tile is
+        if(x.count(' ') == 1):
+            # we have to make sure its not on left so moving the tile left is legal
+            if(x.index(' ') != 0):
+                blankIndex = x.index(' ')
+                x[blankIndex] = x[blankIndex - 1]
+                x[blankIndex - 1] = ' '
+                expand.append(moveLeft)
+
+    moveRight = copy.deepcopy(puzzleChoice)
+    #move blank right
+    for x in moveRight:
+        # this code checks where our blank tile is
+        if(x.count(' ') == 1):
+            # we have to make sure its not on right so moving the tile right is legal
+            if(x.index(' ') != 2):
+                blankIndex = x.index(' ')
+                x[blankIndex] = x[blankIndex + 1]
+                x[blankIndex + 1] = ' '
+                expand.append(moveRight)
+    
+    return possibleMoves
+def solvePuzzle(puzzleChoice,algorithmChoice):
     return   
 if __name__ == "__main__":
     main()
