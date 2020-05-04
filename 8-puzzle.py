@@ -121,7 +121,7 @@ def edHeuristic(puzzleChoice):
                     pRow = i
                     pCol = j
         # caluclating the eucledian distance using puzzle and goal rows and columns
-        eucDist = eucDist +  (pow((gRow - pRow),2) + pow((gCol - pCol),0))
+        eucDist = eucDist +  (pow((gRow - pRow),2) + pow((gCol - pCol),2))
     return eucDist
     
 def puzzleMove(puzzleChoice):
